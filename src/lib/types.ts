@@ -11,12 +11,10 @@ export type BillingItem = {
 }
 
 export type ItemizedReceiptInfo = {
-  type: "itemized",
   usersItems: {[key: string]: BillingItem[]},
 }
 
 export type PercentageReceiptInfo = {
-  type: "percentage",
   usersPercentages: {[key: string]: number},
   items?: BillingItem[],
   total?: number,

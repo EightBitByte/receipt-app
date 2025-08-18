@@ -1,6 +1,7 @@
 import type { UserInfo, ItemizedReceiptInfo, PercentageReceiptInfo} from "@/lib/types";
 import ReceiptHeader from "@/components/ui/receipt-header";
 import ReceiptEntry from "@/components/ui/receipt-entry";
+import { calculateItemizedReceiptTotal } from "@/lib/utils";
 
 
 const AVATAR_DATA: UserInfo[] = [
@@ -31,7 +32,6 @@ const AVATAR_DATA: UserInfo[] = [
 ];
 
 const ITEMIZED_RECEIPT_INFO: ItemizedReceiptInfo = {
-  type: "itemized",
   usersItems: {
     "@sadjester": [
       {title: "Tonkotsu Ramen", subtotal: 12.99},
@@ -55,7 +55,6 @@ const ITEMIZED_RECEIPT_INFO: ItemizedReceiptInfo = {
 }
 
 const PERCENTAGE_RECEIPT_INFO: PercentageReceiptInfo = {
-  type: "percentage",
   usersPercentages: {
     "@sadjester": 25,
     "@ilovesasha": 50,
@@ -66,12 +65,8 @@ const PERCENTAGE_RECEIPT_INFO: PercentageReceiptInfo = {
 }
 
 export default function Receipt() {
-  const total = Object.values(ITEMIZED_RECEIPT_INFO.usersItems)
-    .reduce((total, items) => { 
-      return total + items.reduce((innerTotal, item) => {
-        return innerTotal + item.subtotal;
-      }, 0)
-    }, 0);
+  // const total = calculateItemizedReceiptTotal(ITEMIZED_RECEIPT_INFO);
+  const total = PERCENTAGE_RECEIPT_INFO.total ?? 0;
 
   return (
     <div className="px-24 py-10 grow flex flex-col gap-8">
@@ -88,7 +83,7 @@ export default function Receipt() {
             <ReceiptEntry 
               key={userInfo.username}
               user={userInfo}
-              info={ITEMIZED_RECEIPT_INFO}
+              info={PERCENTAGE_RECEIPT_INFO.usersPercentages[userInfo.username]}
               total={total}
             />
           )}
